@@ -1,0 +1,100 @@
+{% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<style>
+    .tab-space {
+        margin-right: 20px;
+    }
+    .movie-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column; /* Place items in a column */
+    }
+    .movie-image {
+        height: 250px;
+        width: 200px;/* Set the height as per your preference */
+        object-fit: cover;
+        margin-top: 6px; /* Add some space between the YouTube player and the image */
+    }
+    .youtube-player {
+        flex: 1; /* To occupy equal space with the image */
+        margin-top: 10px;
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="movie-container">
+                            <img src="{{ movie.image.url }}" alt="{{ movie.name }}" class="img-fluid movie-image">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="movie-container">
+                            <div class="youtube-player">
+                                {% if movie.youtube_url %}
+                                <iframe class="embed-responsive-item" src="{{ movie.youtube_url }}"></iframe>
+                                {% endif %}
+                                <br>
+                                <b>Movie Trailer</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h1 class="card-title text-center">{{ movie.name }}</h1>
+                    <div class="rating-container" align="center">
+                        <b>Rating:  {{movie.rating}} </b>
+                    </div>
+                    <hr>
+                    <p class="card-text"><b>Cast: </b>{{ movie.cast }}</p>
+                    <hr>
+                    <p class="card-text"><b>Category: </b>{{ movie.category }}</p>
+                    <hr>
+                    <p class="card-text"><b>Description: </b>{{ movie.description }}</p>
+                    <hr>
+                    <p class="card-text"><i>Release Date: {{ movie.release_date }}</i></p>
+                    <hr>
+                    {% if reviewed %}
+                         <p>You have already reviewed this movie.</p>
+                    {% else %}
+                    <h3>Ratings and Reviews</h3>
+                    <form action="{% url 'main:add_review' movie.id %}" method="POST" >
+                        {% csrf_token %}
+                        <label for="comment">Review</label>
+                        <textarea name="comment" id="comment" cols="30" rows="5" class="form-control" required></textarea>
+                        <label for="rating">Rating</label>
+                        <input type="number" name="rating" id="rating" class="form-control" min="1" max="10" step="0.1" required>
+                        </br>
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                        <a  class ="btn btn-warning" href="{% url 'main:update_movie' movie.id %}">Update Movie Details</a>
+                        <a  class ="btn btn-danger" href="{% url 'main:delete' movie.id %}">Delete Movie </a>
+                    </form>
+                    {% endif %}
+                    <div class="mt-4">
+                        {% for review in reviews %}
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ review.user }}</h5>
+                                    <p class="card-text">{{ review.comment }}</p>
+                                    <p class="card-text"><b>Rating: {{ review.rating }}</b></p>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        {% if not reviews %}
+                            <p>No ratings and reviews yet.</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

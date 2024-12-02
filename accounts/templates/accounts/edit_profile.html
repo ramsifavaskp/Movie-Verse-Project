@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Profile</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            margin: 20px; /* Add some margin for spacing */
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            max-width: 400px; /* Limit form width for better layout */
+            margin: 0 auto; /* Center form horizontally */
+            padding: 20px; /* Add padding for spacing */
+            border: 1px solid #ddd; /* Add a thin border */
+        }
+
+        label {
+            display: block; /* Make labels appear on separate lines */
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 3px; /* Add rounded corners */
+            margin-bottom: 15px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Style for profile picture display (optional) */
+        .profile-picture {
+            display: block; /* Ensure block display for image */
+            margin: 0 auto; /* Center image horizontally */
+            margin-bottom: 20px; /* Add bottom margin for spacing */
+            max-width: 150px; /* Set a maximum width for the image */
+            border-radius: 50%; /* Make profile picture circular */
+        }
+    </style>
+</head>
+<body>
+    <h1>Edit Your Profile</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update Profile</button>
+        &nbsp;&nbsp;&nbsp;<a class="nav-link" href="{% url 'accounts:profile' user.username %}">Cancel</a>
+    </form>
+
+    {% if profile.profile_picture %}
+        <img class="profile-picture" src="{{ profile.profile_picture.url }}" alt="Profile Picture">
+    {% endif %}
+</body>
+</html>

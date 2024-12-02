@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Movie List</title>
+</head>
+<body>
+  <h1>Movies</h1>
+  <ul>
+    {% for movie in movies %}
+      <li>
+        <a href="{% url 'movie_detail' movie.id %}">{{ movie.name }}</a> - {{ movie.release_date }}
+      </li>
+    {% endfor %}
+  </ul>
+  <br>
+  <h2>Categories</h2>
+  <ul>
+    {% for category in categories %}
+      <li>
+        <a href="{% url 'movie_create' category.id %}">{{ category.name }}</a>
+      </li> {% endfor %}
+  </ul>
+</body>
+</html>
